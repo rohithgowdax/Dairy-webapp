@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock title %}
+
+{% block banner-slider %}
+
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static "images/banner/b3.jpg" %}" class="d-block w-100" alt="...">
+      </div>
+    </div>
+</div>
+
+{% endblock banner-slider %}
+
+{% block main %}
+<div class="container mt-3">
+    <br>
+    <h2  class="text-center">About Us</h2>
+    <br>
+    <div class="row container">
+        <p class="fs-4 text-center" > This is a public limited company having it registered and corporate office at 'Tumkur' City of 'Karnataka' State in India. The Company was incorporated in the year 2024.
+            This is one of the fastest growing cities in Tumkur.
+        </p>
+    </div>
+    <br>
+    <br>
+    <h2 class="text-center"> Mission</h2>
+    <br>
+    <div class="row container">
+        <p class="fs-4 text-center"> to embrace the right technology to delight our customers
+            Empowering the former community through our unique ' relationship farming ' Model.
+            To anticipate, understand, and respond to our customer needs by creating high-quality products and making them available through innovative one convenient channels
+        </p>
+    </div>
+</div>
+<br><br>
+{% endblock main %}
