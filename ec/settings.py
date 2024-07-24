@@ -138,6 +138,10 @@ MEDIA_URL = '/media/'
 # Path where media is stored'
 MEDIA_ROOT = BASE_DIR /'media'
 
-LOGIN_REDIRECT_URL='/profile/'
+LOGIN_REDIRECT_URL='/'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+#Razor Pay
+RAZOR_KEY_ID = "rzp_test_804bz81CIY3EdI"
+RAZOR_KEY_SECRET = "xU2sKaO29d00KsSx4ESqvJvW"

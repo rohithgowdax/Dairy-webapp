@@ -17,15 +17,28 @@ urlpatterns = [
     path("address/",adress,name="address"),
     path("updateAddress/<int:pk>",UpdateAddress.as_view(),name="updateAddress"),
 
-
-
+    path("add-to-cart/",add_to_cart,name="add_to_cart"),
+    path("cart/",showcart,name="showcart"),
+    path("checkout/",CheckoutView.as_view(),name="checkout"),
+    path("paymentdone/",paymentdone,name='paymentdone'),
+    path("orders/",home,name='orders'),
+    
+    path("pluscart/",pluscart),
+    path("minuscart/",minuscart),
+    path("removecart/",removecart),
    
+
+    
+
+
+
+    #auth
     path("signup/",CustomerRegistrationView.as_view(), name="signup"),
     path("login/",auth_view.LoginView.as_view(template_name="login.html",authentication_form = LoginForm) ,name='login'), 
     path("passwordchange/", auth_view.PasswordChangeView.as_view(template_name="passwordchange.html", form_class =
     MyPasswordChangeForm,success_url ='/passwordchangedone' ),name="passwordchange"),  
     path("passwordchangedone/", auth_view.PasswordChangeDoneView.as_view(template_name="passwordchangedone.html"),name="passwordchangedone") ,
-    path('logout/', auth_view.LogoutView.as_view(next_page='login'), name = 'logout'),
+    path('logout/', Logout, name = 'logout'),
 
     #password reset
     path("password-reset/", auth_view.PasswordResetView.as_view(template_name="password_reset.html", form_class =MyPasswordResetForm), name="password_reset"),
