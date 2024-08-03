@@ -132,16 +132,20 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Static 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 # Base url to serve media files
 MEDIA_URL = '/media/'
 # Path where media is stored'
 MEDIA_ROOT = BASE_DIR /'media'
 
-LOGIN_REDIRECT_URL='/'
+LOGIN_REDIRECT_URL='/profile'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 #Razor Pay
 RAZOR_KEY_ID = "rzp_test_804bz81CIY3EdI"
 RAZOR_KEY_SECRET = "xU2sKaO29d00KsSx4ESqvJvW"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+
+

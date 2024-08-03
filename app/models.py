@@ -76,6 +76,7 @@ class Customer(models.Model):
     zipcode = models.IntegerField()
     state = models.CharField(choices=STATE_CHOICES,max_length=50)
 
+
     def __str__(self) -> str:
         return self.name
     
@@ -85,9 +86,9 @@ class Cart(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
-    # @property
-    # def total_cost(self):
-    #     return self.quantity * self.product.discounted_price
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discounted_price
 
 class Payment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -115,7 +116,12 @@ class OrderPlaced(models.Model):
     ordered_date =models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='Pending')
     payment = models.ForeignKey(Payment,on_delete=models.CASCADE,default="")
+    cust_id = models.PositiveSmallIntegerField()
 
     @property
     def total_cost(self):
         return self.quantity * self.product.discounted_price
+    
+class Wishlist(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)

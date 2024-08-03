@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Product, Cart,Payment,OrderPlaced
+from .models import Product, Cart,Payment,OrderPlaced,Wishlist
 from .forms import *
 import razorpay
 from django.contrib.auth import logout
@@ -8,26 +8,53 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
+# displays no .of items in cart
+def cart_num(request)->int:
+    if request.user.is_authenticated:
+        return  len(Cart.objects.filter(user=request.user))
+
+# displays no .of items in cart
+def wish_num(request)->int:
+    if request.user.is_authenticated:
+        return  len(Wishlist.objects.filter(user=request.user))
+
+
+
+
+
+
 
 
 # Create your views here.
 def home(request):
-    return render(request, "index.html")
+    cartitem = cart_num(request)
+    #
+    return render(request, "index.html",locals())
 
 def about(request):
-    return render(request, "about.html")
+    cartitem = cart_num(request)
+    # 
+    return render(request, "about.html",locals())
 
 def contact(request):
-    return render(request, "contact.html")
+    cartitem = cart_num(request)
+    # 
+    return render(request, "contact.html",locals())
 
 class  CategoryView(View):
     def get(self, request, value):
+        cartitem = cart_num(request)
+        # 
         product = Product.objects.filter(category = value)
         title = Product.objects.filter(category = value).values('title')
         return render(request,"category.html",locals())
     
 class CategoryTitle(View):
     def get(self, request, value):
+        cartitem = cart_num(request)
+        # 
         product = Product.objects.filter(title = value)
         title = Product.objects.filter(category = product[0].category)
         return render(request, "category.html", locals())
@@ -35,7 +62,12 @@ class CategoryTitle(View):
 
 class ProductDetail(View):
     def get(self, request, pk):
+        cartitem = cart_num(request)
+        # 
         product = Product.objects.get(id = pk) 
+        if request.user.is_authenticated:
+            wishlist = Wishlist.objects.filter(Q(user=request.user)& Q(product=product))
+
         return render(request,'productdetail.html',locals())
     
 class CustomerRegistrationView(View):
@@ -47,17 +79,21 @@ class CustomerRegistrationView(View):
         form = CustomerRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,"Account Created Succesfully Please Login")
+            return redirect('login')
         else:
             messages.warning(request,"Invalid data Inputs! ")
         return render(request,"signup.html",locals())
-    
+
 class ProfileView(View):
     def get(self, request):
+        cartitem = cart_num(request)
+        # 
         form = CustomerProfileForm()
         return render(request,'profile.html',locals())
 
     def post(self, request):
+        cartitem = cart_num(request)
+        # 
         form = CustomerProfileForm(request.POST)
         if form.is_valid():
             user = request.user
@@ -68,22 +104,32 @@ class ProfileView(View):
             state = form.cleaned_data['state']
             zipcode = form.cleaned_data['zipcode']
 
-            reg = Customer(user=user,name=name,locality=locality,mobile=mobile,city=city,state=state,zipcode=zipcode)
-            reg.save()
-            messages.success(request,"Congratulations! Profile Created Succesfully")
+            Customer(user=user,name=name,locality=locality,mobile=mobile,city=city,state=state,zipcode=zipcode).save()
+            
+            return redirect('address')
         else:
             messages.warning(request,"Invalid data Inputs! ")
         return render(request,'profile.html',locals())
 
+@login_required
 def adress(request):
+    cartitem = cart_num(request)
+    # 
     add = Customer.objects.filter(user=request.user)
     return render(request,'address.html',locals())
-            
+
+def delete_address(request,pk):
+    Customer.objects.get(id=pk).delete()
+    return redirect('address')
+    
 class UpdateAddress(View):
     def get(self,request,pk):
+        cartitem = cart_num(request)
+        #
         add = Customer.objects.get(pk=pk)
         form = CustomerProfileForm(instance=add)
         return render(request,'updateaddress.html',locals())
+    
     def post(self,request,pk):
         form = CustomerProfileForm(request.POST)
         if form.is_valid():
@@ -100,12 +146,14 @@ class UpdateAddress(View):
             messages.warning(request,"Invalid data Inputs! ")
         return redirect('address')
         
-
+@login_required
 def Logout(request):
      logout(request)
      return redirect('login')
 
+@login_required(login_url='login')
 def add_to_cart(request):
+    
     user = request.user
     product_id = request.GET.get('prod_id')
     product = Product.objects.get(id=product_id)
@@ -113,7 +161,10 @@ def add_to_cart(request):
     return redirect('showcart')
 
 
+@login_required
 def showcart(request):
+    cartitem = cart_num(request)
+    # 
     user = request.user
     cart = Cart.objects.filter(user=user)
     amount = 0
@@ -123,6 +174,7 @@ def showcart(request):
     totalamount = amount +40
     return render(request,'cart.html',locals())
 
+@login_required
 def pluscart(request):
     if request.method == 'GET':
         prod_id=request.GET['prod_id']
@@ -143,12 +195,14 @@ def pluscart(request):
         }
         return JsonResponse(data)
     
+@login_required   
 def minuscart(request):
     if request.method == 'GET':
         prod_id=request.GET['prod_id']
         c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))
-        c.quantity-=1
-        c.save()
+        if c.quantity >1:
+            c.quantity-=1
+            c.save()
         user = request.user
         cart = Cart.objects.filter(user=user)
         amount = 0
@@ -168,9 +222,8 @@ def removecart(request):
         prod_id=request.GET['prod_id']
         c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))
         c.delete()
-        user = request.user
-        cart = Cart.objects.filter(user=user)
-        amount = 0
+        cart = Cart.objects.filter(user=request.user)
+        amount = 0.0
         for p in cart:
             value = p.quantity * p.product.discounted_price
             amount+=value
@@ -181,9 +234,13 @@ def removecart(request):
                 'totalamount':totalamount
         }
         return JsonResponse(data)
+      
 
 class CheckoutView(View):
+
     def get(self, request):
+        cartitem = cart_num(request)
+        # 
         user = request.user
         add = Customer.objects.filter(user=user)
         cart_items = Cart.objects.filter(user=user)
@@ -210,6 +267,7 @@ class CheckoutView(View):
         
         return render(request,"checkout.html",locals())
     
+@login_required    
 def paymentdone(request):
     order_id = request.GET.get('order_id')
     payment_id = request.GET.get('payment_id')
@@ -221,15 +279,51 @@ def paymentdone(request):
     # To update payment status and payment id 
     payment =Payment.objects.get(razorpay_order_id=order_id)
     payment.paid =True
-    payment.razorpay_order_id= payment_id
+    payment.razorpay_order_id= order_id
+    payment.razorpay_payment_id= payment_id
+
     payment.save()
 
     # to save order details
     cart = Cart.objects.filter(user=user)
     for c in cart:
-        OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity,payment=payment).save()
+        OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity,payment=payment,cust_id = customer.id).save()
         c.delete()
     return redirect('orders')
 
+@login_required
 def orders(request):
-    pass
+    cartitem = cart_num(request)
+    # 
+    order_placed = OrderPlaced.objects.filter(user=request.user)
+    return render(request,"orders.html",locals())
+
+
+def plus_wishlist(request):
+    if request.method == 'GET':
+        prod_id=request.GET['prod_id']
+        product = Product.objects.get(id=prod_id)
+        user = request.user
+        Wishlist(user=user, product = product).save()
+        data = {
+            'message':'Wishlist Added Successfully'
+        }
+        return JsonResponse(data)
+
+   
+
+def minus_wishlist(request):
+    if request.method == 'GET':
+        prod_id=request.GET['prod_id']
+        user = request.user
+        product = Product.objects.get(id=prod_id)
+        Wishlist.objects.filter(user=user, product = product).delete()
+        data = {
+            'message':'Wishlist Removed Successfully'
+        }
+        return JsonResponse(data)
+
+def search(request):
+    query = request.GET['search']
+    product = Product.objects.filter(Q(title__icontains=query))
+    return render(request, "search.html",locals())

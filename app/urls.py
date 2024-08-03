@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_view
 from .forms import LoginForm, MyPasswordResetForm, MyPasswordChangeForm, MySetPasswordForm
+from django.contrib import admin
 
 urlpatterns = [
 
@@ -16,17 +17,27 @@ urlpatterns = [
     path("profile/",ProfileView.as_view(),name="profile"),
     path("address/",adress,name="address"),
     path("updateAddress/<int:pk>",UpdateAddress.as_view(),name="updateAddress"),
-
+    path("deleteaddress/<int:pk>",delete_address,name = 'deleteaddress'),
     path("add-to-cart/",add_to_cart,name="add_to_cart"),
     path("cart/",showcart,name="showcart"),
     path("checkout/",CheckoutView.as_view(),name="checkout"),
     path("paymentdone/",paymentdone,name='paymentdone'),
-    path("orders/",home,name='orders'),
+    path("orders/",orders,name='orders'),
+    path("orders/",orders,name='wishlist'),
+    path("search/",search,name='search'),
+
+
     
     path("pluscart/",pluscart),
     path("minuscart/",minuscart),
     path("removecart/",removecart),
+
+    path("pluswishlist/",plus_wishlist),
+    path("minuswishlist/",minus_wishlist),
+
+
    
+
 
     
 
@@ -51,3 +62,9 @@ urlpatterns = [
     
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Neel Dairy"
+admin.site.site_title = "Neel Dairy Administration"
+admin.site.site_index_title = "Welcome to Neel Dairy"
+
+

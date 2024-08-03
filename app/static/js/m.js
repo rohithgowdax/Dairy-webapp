@@ -34,7 +34,6 @@ $('.minus-cart').click(function(){
     })
 })
 
-
 $('.remove-cart').click(function(){
     var id=$(this).attr("pid").toString();
     var eml=this
@@ -48,10 +47,11 @@ $('.remove-cart').click(function(){
             document.getElementById("amount").innerText=data.amount 
             document.getElementById("totalamount").innerText=data.totalamount
             eml.parentNode.parentNode.parentNode.parentNode.remove() 
+            window.location.href = `http://127.0.0.1:8000/cart`
+            
         }
     })
 })
-
 
 $('.plus-wishlist').click(function(){
     var id=$(this).attr("pid").toString();
@@ -63,7 +63,7 @@ $('.plus-wishlist').click(function(){
         },
         success:function(data){
             //alert(data.message)
-            window.location.href = `http://localhost:8000/product-detail/${id}`
+            window.location.href = `http://127.0.0.1:8000/product-detail/${id}`
         }
     })
 })
@@ -78,7 +78,7 @@ $('.minus-wishlist').click(function(){
             prod_id:id
         },
         success:function(data){
-            window.location.href = `http://localhost:8000/product-detail/${id}`
+            window.location.href = `http://127.0.0.1:8000/product-detail/${id}`
         }
     })
 })
