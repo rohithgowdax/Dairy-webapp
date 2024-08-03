@@ -145,3 +145,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 #Razor Pay
 RAZOR_KEY_ID = "" #your razor pay key here
 RAZOR_KEY_SECRET = "" #your razor pay secret key here
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
