@@ -143,7 +143,7 @@ LOGIN_REDIRECT_URL='/profile'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 #Razor Pay
-RAZOR_KEY_ID = "rzp_test_804bz81CIY3EdI" #your razor pay key here
-RAZOR_KEY_SECRET = "xU2sKaO29d00KsSx4ESqvJvW" #your razor pay secret key here
+RAZOR_KEY_ID = "" #your razor pay key here
+RAZOR_KEY_SECRET = "" #your razor pay secret key here
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
