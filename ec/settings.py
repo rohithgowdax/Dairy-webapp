@@ -60,10 +60,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ec.urls'
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,7 +125,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -143,7 +143,7 @@ LOGIN_REDIRECT_URL='/profile'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 #Razor Pay
-RAZOR_KEY_ID = "" #your razor pay key here
-RAZOR_KEY_SECRET = "" #your razor pay secret key here
+RAZOR_KEY_ID = "rzp_test_804bz81CIY3EdI" #your razor pay key here
+RAZOR_KEY_SECRET = "xU2sKaO29d00KsSx4ESqvJvW" #your razor pay secret key here
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

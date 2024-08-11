@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Customer,Cart,Payment,OrderPlaced,Wishlist
+from .models import Product, Customer,Cart,Payment,OrderPlaced
 from django.utils.html import format_html
 from django.urls import reverse
 # Register your models here.
@@ -27,6 +27,5 @@ class PaymentModelAdmin(admin.ModelAdmin):
 class OrderPlacedModelAdmin(admin.ModelAdmin):
     list_display =['id','user','customer','product','quantity','ordered_date','status','payment','cust_id']
 
-@admin.register(Wishlist)
-class WishlistModelAdmin(admin.ModelAdmin):
-    list_display = ['id','user','product']
+
+

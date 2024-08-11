@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Product, Cart,Payment,OrderPlaced,Wishlist
+from .models import Product, Cart,Payment,OrderPlaced
 from .forms import *
 import razorpay
 from django.contrib.auth import logout
@@ -14,17 +14,6 @@ from django.contrib.auth.decorators import login_required
 def cart_num(request)->int:
     if request.user.is_authenticated:
         return  len(Cart.objects.filter(user=request.user))
-
-# displays no .of items in cart
-def wish_num(request)->int:
-    if request.user.is_authenticated:
-        return  len(Wishlist.objects.filter(user=request.user))
-
-
-
-
-
-
 
 
 # Create your views here.
@@ -65,9 +54,6 @@ class ProductDetail(View):
         cartitem = cart_num(request)
         # 
         product = Product.objects.get(id = pk) 
-        if request.user.is_authenticated:
-            wishlist = Wishlist.objects.filter(Q(user=request.user)& Q(product=product))
-
         return render(request,'productdetail.html',locals())
     
 class CustomerRegistrationView(View):
@@ -297,31 +283,6 @@ def orders(request):
     # 
     order_placed = OrderPlaced.objects.filter(user=request.user)
     return render(request,"orders.html",locals())
-
-
-def plus_wishlist(request):
-    if request.method == 'GET':
-        prod_id=request.GET['prod_id']
-        product = Product.objects.get(id=prod_id)
-        user = request.user
-        Wishlist(user=user, product = product).save()
-        data = {
-            'message':'Wishlist Added Successfully'
-        }
-        return JsonResponse(data)
-
-   
-
-def minus_wishlist(request):
-    if request.method == 'GET':
-        prod_id=request.GET['prod_id']
-        user = request.user
-        product = Product.objects.get(id=prod_id)
-        Wishlist.objects.filter(user=user, product = product).delete()
-        data = {
-            'message':'Wishlist Removed Successfully'
-        }
-        return JsonResponse(data)
 
 def search(request):
     query = request.GET['search']

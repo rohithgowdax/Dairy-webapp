@@ -12,10 +12,10 @@
       <hr>
       <form action="" method="post" novalidate class="shadow p-5">
         {% csrf_token %}
-        {% for fm in form %}
-          {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
-          <br>
-        {% endfor %}
+         {% for fm in form %}
+           {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+          <br> 
+        {% endfor %} 
         <input type="submit" value="Submit" class="btn btn-primary">
         <br>
         <div class="text-center text-primary fw-bold">

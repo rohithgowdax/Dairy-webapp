@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -26,22 +26,12 @@ urlpatterns = [
     path("orders/",orders,name='wishlist'),
     path("search/",search,name='search'),
 
-
-    
     path("pluscart/",pluscart),
     path("minuscart/",minuscart),
     path("removecart/",removecart),
 
-    path("pluswishlist/",plus_wishlist),
-    path("minuswishlist/",minus_wishlist),
-
-
-   
-
-
-    
-
-
+    # path("pluswishlist/",plus_wishlist),
+    # path("minuswishlist/",minus_wishlist),
 
     #auth
     path("signup/",CustomerRegistrationView.as_view(), name="signup"),
