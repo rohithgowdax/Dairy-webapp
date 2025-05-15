@@ -1,6 +1,6 @@
 # 🛒 E-Commerce Website (Dairy Web-App)
 
-A fully functional e-commerce web application built from scratch using **Django**, **HTML**, **CSS**, **JavaScript**, and **SQLite3**, designed with core e-commerce features including product catalog, shopping cart, checkout, user authentication, and secure payment processing with **Razorpay**.
+An E-commerce web application incorporating essential features such as product catalog, shopping cart, checkout process, and‬ user authentication using HTML, CSS, JavaScript, Django, and SQLite3. Implemented stringent‬ security measures including SQL injection prevention, brute force protection, password hashing‬,data encryption and secure payment processing with **Razorpay**.
 
 ---
 
